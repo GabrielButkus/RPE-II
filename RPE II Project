@@ -11,7 +11,7 @@ SSD1306Wire  display(0x3c, 23, 25);
 #define ORANGE 15
 #define WHITE 2
 #define COLORS 4
-#define LOCKER 28
+#define LOCKER 27
 
 char pass[COLORS];
 String password = "";
