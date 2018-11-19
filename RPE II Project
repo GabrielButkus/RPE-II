@@ -1,0 +1,176 @@
+#include <IOXhop_FirebaseStream.h>
+#include <IOXhop_FirebaseESP32.h>
+#include <Wire.h>
+#include "SSD1306Wire.h"
+SSD1306Wire  display(0x3c, 23, 25);
+
+#define SERIAL_FREQUENCY 115200
+#define RED 6
+#define GREEN 7
+#define BLUE 8
+#define ORANGE 15
+#define WHITE 2
+#define COLORS 4
+#define LOCKER 28
+
+char pass[COLORS];
+String password = "";
+String gabrielPass = "ROWG";
+String thiagoPass = "GWOB";
+String victorPass = "BBOW";
+String panicPass = "WOOB";
+String openPass = "BOWG";
+String passType;
+String path;
+
+String catchPass(){
+  int i = 0; 
+  while(i<COLORS){
+   if(digitalRead(RED) == HIGH) {
+      pass[i] == 'R';
+      password = password + pass[i];
+      i++;
+      while(digitalRead(RED) == HIGH){}
+     } else if(digitalRead(GREEN) == HIGH) {
+      pass[i] == 'G';
+      password = password + pass[i];
+      i++;
+      while(digitalRead(GREEN) == HIGH){}
+     } else if(digitalRead(BLUE) == HIGH) {
+      pass[i] == 'B';
+      password = password + pass[i];
+      i++;
+      while(digitalRead(BLUE) == HIGH){}
+     } else if(digitalRead(ORANGE) == HIGH) {
+      pass[i] = 'O';
+      password = password + pass[i];
+      i++;
+      while(digitalRead(ORANGE) == HIGH){}
+     } else if(digitalRead(WHITE) == HIGH) {
+      pass[i] = 'W';
+      password = password + pass[i];
+      i++;
+      while(digitalRead(WHITE) == HIGH){}
+     }    
+  }
+    return password;
+}
+
+void openLocker(){
+  digitalWrite(LOCKER, HIGH);
+  delay(1000);
+  digitalWrite(LOCKER, LOW);
+}
+
+String hour;
+
+void setup() {
+  Serial.begin(SERIAL_FREQUENCY);
+  pinMode(RED, INPUT);
+  pinMode(BLUE, INPUT);
+  pinMode(GREEN, INPUT);
+  pinMode(ORANGE, INPUT);
+  pinMode(WHITE, INPUT);
+
+  display.init();
+  display.setFont(ArialMT_Plain_10);
+}
+
+void loop() {
+  display.drawString(64, 22, "type your password: ");
+  delay(500);
+  display.clear();
+
+  String password = catchPass();
+
+  int ops = 0;
+
+  if(password == gabrielPass){
+    display.drawString(64, 22, "Gabriel");
+    delay(500);
+    display.clear();
+    display.drawString(64, 22, "Type the password: ");
+    delay(1000);
+    display.clear();
+    password = catchPass();
+    if(password == openPass){
+      openLocker();
+    } else if(password == panicPass) {
+      openLocker();
+      Serial.println("AT+CMFG=1");
+      delay(100);
+      Serial.println("AT+CMGS=\"+5541992584959\"");
+      delay(100);
+      Serial.print("Gabriel is in danger, please call the police!");
+      delay(500);
+      Serial.print(char(26));
+      delay(100);
+    } else {
+      display.drawString(64, 22, "BLOCKED");
+      ops++;
+    }
+  }
+
+  if(password == thiagoPass){
+    display.drawString(64, 22, "Thiago");
+    delay(500);
+    display.clear();
+    display.drawString(64, 22, "Type the password: ");
+    delay(1000);
+    display.clear();
+    password = catchPass();
+    if(password == openPass){
+      openLocker();
+    } else if(password == panicPass) {
+      openLocker();
+      Serial.println("AT+CMFG=1");
+      delay(100);
+      Serial.println("AT+CMGS=\"+5541992584959\"");
+      delay(100);
+      Serial.print("Thiago is in danger, please call the police!");
+      delay(500);
+      Serial.print(char(26));
+      delay(100);
+    } else {
+      display.drawString(64, 22, "BLOCKED");
+      ops++;
+    }
+  }
+
+  if(password == victorPass){
+    display.drawString(64, 22, "Victor");
+    delay(500);
+    display.clear();
+    display.drawString(64, 22, "Type the password: ");
+    delay(1000);
+    display.clear();
+    password = catchPass();
+    if(password == openPass){
+      openLocker();
+    } else if(password == panicPass) {
+      openLocker();
+      Serial.println("AT+CMFG=1");
+      delay(100);
+      Serial.println("AT+CMGS=\"+5541992584959\"");
+      delay(100);
+      Serial.print("Victor is in danger, please call the police!");
+      delay(500);
+      Serial.print(char(26));
+      delay(100);
+    } else {
+      display.drawString(64, 22, "BLOCKED");
+      ops++;
+    }
+  }
+
+  if(ops == 3) {
+      Serial.println("AT+CMFG=1");
+      delay(100);
+      Serial.println("AT+CMGS=\"+5541992584959\"");
+      delay(100);
+      Serial.print("Some bitch is trying to enter your house!! Go see what the fuck is happening!");
+      delay(500);
+      Serial.print(char(26));
+      delay(100);
+  }
+}
